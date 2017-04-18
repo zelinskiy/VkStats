@@ -13,7 +13,7 @@ namespace VkStatsForm
     public class Analyzer
     {
 
-        private const string GroupName = "knnrk.media";
+        private readonly string GroupName;
 
         private readonly VkNet.Model.Group Group;
 
@@ -24,11 +24,12 @@ namespace VkStatsForm
         public Analyzer(
             string login, 
             string pass, 
-            ulong applicationId, 
+            ulong applicationId,
+            string groupName,
             Action<string> log)
         {
             Log = log;
-
+            GroupName = groupName;
 
             VkApi = new VkApi();
             VkApi.Authorize(new ApiAuthParams
@@ -57,10 +58,11 @@ namespace VkStatsForm
             var nmembers = Group.MembersCount.Value;
             for (int i = 0; i < nmembers; i += 1000)
             {
-                res.AddRange(VkApi.Groups.GetMembers(new GroupsGetMembersParams
-                {
-                    Offset = i < nmembers ? i : nmembers % i,
-                    GroupId = Group.ScreenName
+                res.AddRange(VkApi.Groups.GetMembers(
+                    new GroupsGetMembersParams
+                    {
+                        Offset = i < nmembers ? i : nmembers % i,
+                        GroupId = Group.Id.ToString()
                 })
                 .Select(m => m.Id));
             }
@@ -192,6 +194,23 @@ namespace VkStatsForm
                     .OrderByDescending(s => s.Total)
                     .ToList();
             }
+        }
+
+        public List<VkNet.Model.Group> GetPublics(int maxgroups, int maxusers)
+        {
+            Log("Loading groups for " + maxusers + " users");
+            return  ActiveSubscribers
+                .Take(maxusers)
+                .SelectMany(s =>
+                {
+                    Log("Loading groups for user #" + s.UserId);
+                    return VkApi.Groups.Get(new GroupsGetParams
+                    {
+                        UserId = s.UserId,
+                        Count = maxgroups
+                    });
+                })
+                .ToList();
         }
 
 

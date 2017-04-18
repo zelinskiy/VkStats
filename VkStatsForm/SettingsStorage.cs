@@ -11,6 +11,7 @@ namespace VkStatsForm
     {
         private const string settingsPath = "secrets.txt";
 
+        public static string GroupName = "";
         public static string Password = "";
         public static string Login = "";
         public static ulong AppId = 0;
@@ -23,6 +24,7 @@ namespace VkStatsForm
             Login = storedSecrets[0];
             Password = storedSecrets[1];
             AppId = ulong.Parse(storedSecrets[2]);
+            GroupName = storedSecrets[3];
         }
 
         static void SaveSettings(object sender, EventArgs e)
@@ -32,7 +34,8 @@ namespace VkStatsForm
                 new string[] {
                     Login,
                     Password,
-                    AppId.ToString()
+                    AppId.ToString(),
+                    GroupName
                 });
 
         }

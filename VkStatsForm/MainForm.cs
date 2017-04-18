@@ -23,7 +23,9 @@ namespace VkStatsForm
             LoginTextBox.Text = SettingsStorage.Login;
             PasswordTextBox.Text = SettingsStorage.Password;
             AppIdTextBox.Text = SettingsStorage.AppId.ToString();
-            
+            GroupNameTextBox.Text = SettingsStorage.GroupName;
+
+
         }
         
 
@@ -66,12 +68,14 @@ namespace VkStatsForm
                     SettingsStorage.Login,
                     SettingsStorage.Password,
                     SettingsStorage.AppId,
+                    SettingsStorage.GroupName,
                     Log);
                 Log("Logged in!");
                 StartButton.BackColor = Color.LightGreen;
                 ShowActiveSubsButton.Visible = true;
                 ShowNonActiveSubsButton.Visible = true;
                 ShowActiveNonSubsButton.Visible = true;
+                GetPublicsButton.Visible = true;
             }
             catch(Exception ex)
             {
@@ -89,6 +93,11 @@ namespace VkStatsForm
                 {
                     Log($"User #{s.UserId} (L:{s.NLikes}, R:{s.NReposts}, C:{s.NComments})");
                 }
+                Log($"---------------");
+                Log($"Top 10 publics:");
+                Log($"---------------");
+
+                
             });          
             
         }
@@ -101,6 +110,11 @@ namespace VkStatsForm
         private void PasswordTextBox_TextChanged(object sender, EventArgs e)
         {
             SettingsStorage.Password = PasswordTextBox.Text;
+        }
+
+        private void GroupNameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SettingsStorage.GroupName = GroupNameTextBox.Text;
         }
 
         private void AppIdTextBox_TextChanged(object sender, EventArgs e)
@@ -135,6 +149,17 @@ namespace VkStatsForm
                     Log($"User #{s.UserId} (L:{s.NLikes}, R:{s.NReposts}, C:{s.NComments})");
                 }
             });
+        }
+
+        private void GetPublicsButton_Click(object sender, EventArgs e)
+        {
+            Log("Top publics:");
+            var pubs = analyzer.GetPublics(25, 1000);
+
+            foreach(var p in pubs.GroupBy(p => p.Id).OrderBy(g => g.Count()))
+            {
+                Log(p.First().Id + " occurs " + p.Count() + " times");
+            }
         }
     }
 }

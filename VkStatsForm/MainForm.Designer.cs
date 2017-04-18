@@ -28,6 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.LogOutputTextBox = new System.Windows.Forms.TextBox();
             this.StartButton = new System.Windows.Forms.Button();
             this.ShowActiveSubsButton = new System.Windows.Forms.Button();
@@ -39,22 +45,42 @@
             this.label2 = new System.Windows.Forms.Label();
             this.AppIdTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.MainTab = new System.Windows.Forms.TabControl();
+            this.LogTab = new System.Windows.Forms.TabPage();
+            this.UsersTab = new System.Windows.Forms.TabPage();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.UsersDataGridView = new System.Windows.Forms.DataGridView();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.GroupNameTextBox = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.GetPublicsButton = new System.Windows.Forms.Button();
+            this.MainTab.SuspendLayout();
+            this.LogTab.SuspendLayout();
+            this.UsersTab.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.UsersDataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
             // 
             // LogOutputTextBox
             // 
-            this.LogOutputTextBox.Location = new System.Drawing.Point(188, 12);
+            this.LogOutputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LogOutputTextBox.Location = new System.Drawing.Point(0, 0);
             this.LogOutputTextBox.Multiline = true;
             this.LogOutputTextBox.Name = "LogOutputTextBox";
             this.LogOutputTextBox.ReadOnly = true;
             this.LogOutputTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.LogOutputTextBox.Size = new System.Drawing.Size(444, 447);
+            this.LogOutputTextBox.Size = new System.Drawing.Size(446, 445);
             this.LogOutputTextBox.TabIndex = 0;
             // 
             // StartButton
             // 
             this.StartButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.StartButton.Location = new System.Drawing.Point(12, 139);
+            this.StartButton.Location = new System.Drawing.Point(12, 181);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(170, 34);
             this.StartButton.TabIndex = 1;
@@ -148,11 +174,135 @@
             this.label3.TabIndex = 9;
             this.label3.Text = "ApplicationId";
             // 
+            // MainTab
+            // 
+            this.MainTab.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainTab.Controls.Add(this.LogTab);
+            this.MainTab.Controls.Add(this.UsersTab);
+            this.MainTab.Controls.Add(this.tabPage1);
+            this.MainTab.Location = new System.Drawing.Point(188, 12);
+            this.MainTab.Name = "MainTab";
+            this.MainTab.SelectedIndex = 0;
+            this.MainTab.Size = new System.Drawing.Size(454, 471);
+            this.MainTab.TabIndex = 11;
+            // 
+            // LogTab
+            // 
+            this.LogTab.Controls.Add(this.LogOutputTextBox);
+            this.LogTab.Location = new System.Drawing.Point(4, 22);
+            this.LogTab.Name = "LogTab";
+            this.LogTab.Padding = new System.Windows.Forms.Padding(3);
+            this.LogTab.Size = new System.Drawing.Size(446, 445);
+            this.LogTab.TabIndex = 0;
+            this.LogTab.Text = "Log";
+            this.LogTab.UseVisualStyleBackColor = true;
+            // 
+            // UsersTab
+            // 
+            this.UsersTab.Controls.Add(this.UsersDataGridView);
+            this.UsersTab.Location = new System.Drawing.Point(4, 22);
+            this.UsersTab.Name = "UsersTab";
+            this.UsersTab.Padding = new System.Windows.Forms.Padding(3);
+            this.UsersTab.Size = new System.Drawing.Size(446, 445);
+            this.UsersTab.TabIndex = 1;
+            this.UsersTab.Text = "Users";
+            this.UsersTab.UseVisualStyleBackColor = true;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.chart2);
+            this.tabPage1.Controls.Add(this.chart1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(446, 445);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Stats";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // UsersDataGridView
+            // 
+            this.UsersDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.UsersDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.UsersDataGridView.Location = new System.Drawing.Point(0, 0);
+            this.UsersDataGridView.Name = "UsersDataGridView";
+            this.UsersDataGridView.Size = new System.Drawing.Size(446, 445);
+            this.UsersDataGridView.TabIndex = 0;
+            // 
+            // chart1
+            // 
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
+            legend5.Name = "Legend1";
+            this.chart1.Legends.Add(legend5);
+            this.chart1.Location = new System.Drawing.Point(0, 0);
+            this.chart1.Name = "chart1";
+            series5.ChartArea = "ChartArea1";
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            this.chart1.Series.Add(series5);
+            this.chart1.Size = new System.Drawing.Size(300, 300);
+            this.chart1.TabIndex = 0;
+            this.chart1.Text = "chart1";
+            // 
+            // chart2
+            // 
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
+            legend6.Name = "Legend1";
+            this.chart2.Legends.Add(legend6);
+            this.chart2.Location = new System.Drawing.Point(306, 0);
+            this.chart2.Name = "chart2";
+            series6.ChartArea = "ChartArea1";
+            series6.Legend = "Legend1";
+            series6.Name = "Series1";
+            this.chart2.Series.Add(series6);
+            this.chart2.Size = new System.Drawing.Size(300, 300);
+            this.chart2.TabIndex = 1;
+            this.chart2.Text = "chart2";
+            // 
+            // GroupNameTextBox
+            // 
+            this.GroupNameTextBox.Location = new System.Drawing.Point(12, 155);
+            this.GroupNameTextBox.Name = "GroupNameTextBox";
+            this.GroupNameTextBox.Size = new System.Drawing.Size(170, 20);
+            this.GroupNameTextBox.TabIndex = 13;
+            this.GroupNameTextBox.Text = "knnrk.media";
+            this.GroupNameTextBox.TextChanged += new System.EventHandler(this.GroupNameTextBox_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 138);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(36, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "Public";
+            // 
+            // GetPublicsButton
+            // 
+            this.GetPublicsButton.Location = new System.Drawing.Point(12, 317);
+            this.GetPublicsButton.Name = "GetPublicsButton";
+            this.GetPublicsButton.Size = new System.Drawing.Size(170, 31);
+            this.GetPublicsButton.TabIndex = 14;
+            this.GetPublicsButton.Text = "10 Publics";
+            this.GetPublicsButton.UseVisualStyleBackColor = true;
+            this.GetPublicsButton.Visible = false;
+            this.GetPublicsButton.Click += new System.EventHandler(this.GetPublicsButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(644, 471);
+            this.ClientSize = new System.Drawing.Size(654, 495);
+            this.Controls.Add(this.GetPublicsButton);
+            this.Controls.Add(this.GroupNameTextBox);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.MainTab);
             this.Controls.Add(this.AppIdTextBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.PasswordTextBox);
@@ -163,10 +313,17 @@
             this.Controls.Add(this.ShowNonActiveSubsButton);
             this.Controls.Add(this.ShowActiveSubsButton);
             this.Controls.Add(this.StartButton);
-            this.Controls.Add(this.LogOutputTextBox);
             this.Name = "MainForm";
             this.Text = "VkStats";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.MainTab.ResumeLayout(false);
+            this.LogTab.ResumeLayout(false);
+            this.LogTab.PerformLayout();
+            this.UsersTab.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.UsersDataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,6 +342,16 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox AppIdTextBox;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TabControl MainTab;
+        private System.Windows.Forms.TabPage LogTab;
+        private System.Windows.Forms.TabPage UsersTab;
+        private System.Windows.Forms.DataGridView UsersDataGridView;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.TextBox GroupNameTextBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button GetPublicsButton;
     }
 }
 
