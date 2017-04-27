@@ -14,7 +14,9 @@ namespace VkStatsForm
     public partial class MainForm : Form
     {
 
-        private Analyzer analyzer;
+        private Downloader downloader;
+
+        private CancellationTokenSource cts;
 
         public MainForm()
         {
@@ -25,9 +27,11 @@ namespace VkStatsForm
             AppIdTextBox.Text = SettingsStorage.AppId.ToString();
             GroupNameTextBox.Text = SettingsStorage.GroupName;
 
+            cts = new CancellationTokenSource();
+
 
         }
-        
+
 
         void Log(string msg)
         {
@@ -39,6 +43,11 @@ namespace VkStatsForm
             var t = DateTime.Now.ToString("HH:mm:ss");
             LogOutputTextBox.AppendText($"\n[LOG] [{t}] {msg}\n");
         }
+
+
+
+
+
 
         void LogError(string msg)
         {
@@ -64,42 +73,16 @@ namespace VkStatsForm
             Log("Logging...");
             try
             {
-                analyzer = new Analyzer(
-                    SettingsStorage.Login,
-                    SettingsStorage.Password,
-                    SettingsStorage.AppId,
-                    SettingsStorage.GroupName,
-                    Log);
+                downloader = new Downloader(Log);
                 Log("Logged in!");
                 StartButton.BackColor = Color.LightGreen;
-                ShowActiveSubsButton.Visible = true;
-                ShowNonActiveSubsButton.Visible = true;
-                ShowActiveNonSubsButton.Visible = true;
-                GetPublicsButton.Visible = true;
+                showButtonsControlTab.Visible = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LogError(ex.Message);
             }
-            
-        }
 
-        private void ShowActiveSubsButton_Click(object sender, EventArgs e)
-        {
-            Task.Run(() => 
-            {
-                Log($"ActiveSubscribers:");
-                foreach (var s in analyzer.ActiveSubscribers)
-                {
-                    Log($"User #{s.UserId} (L:{s.NLikes}, R:{s.NReposts}, C:{s.NComments})");
-                }
-                Log($"---------------");
-                Log($"Top 10 publics:");
-                Log($"---------------");
-
-                
-            });          
-            
         }
 
         private void LoginTextBox_TextChanged(object sender, EventArgs e)
@@ -124,41 +107,144 @@ namespace VkStatsForm
             {
                 LogError($"Cannot parse AppId {AppIdTextBox.Text}");
             }
-           
+
         }
 
-        private void ShowNonActiveSubsButton_Click(object sender, EventArgs e)
+
+
+        private void downloadPostsLikesButton_Click(object sender, EventArgs e)
         {
             Task.Run(() =>
             {
-                Log($"NonActiveSubscribers:");
-                foreach (var s in analyzer.NonActiveSubscribers)
-                {
-                    Log($"User #{s.UserId} (L:{s.NLikes}, R:{s.NReposts}, C:{s.NComments})");
-                }
+                downloader.DownloadAllPostLikes(cts.Token);
             });
         }
 
-        private void ShowActiveNonSubsButton_Click(object sender, EventArgs e)
+        private void downloadCommentsLikesButton_Click(object sender, EventArgs e)
         {
             Task.Run(() =>
             {
-                Log($"ActiveNonSubscribers:");
-                foreach (var s in analyzer.ActiveNonSubscribers)
-                {
-                    Log($"User #{s.UserId} (L:{s.NLikes}, R:{s.NReposts}, C:{s.NComments})");
-                }
+                downloader.DownloadAllCommentLikes(cts.Token);
             });
         }
 
-        private void GetPublicsButton_Click(object sender, EventArgs e)
+        private void DownloadPostsButton_Click(object sender, EventArgs e)
         {
-            Log("Top publics:");
-            var pubs = analyzer.GetPublics(25, 1000);
-
-            foreach(var p in pubs.GroupBy(p => p.Id).OrderBy(g => g.Count()))
+            Task.Run(() =>
             {
-                Log(p.First().Id + " occurs " + p.Count() + " times");
+                downloader.DownloadAllPosts(cts.Token);
+            });
+        }
+
+        private void downloadSubscribersButton_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                downloader.DownloadAllSubscribers(cts.Token);
+            });
+        }
+
+        private void downloadNonSubscribersButton_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                downloader.DownloadAllNonSubscribers(cts.Token);
+            });
+        }
+
+
+        private void downloadCommentsButton_Click(object sender, EventArgs e)
+        {
+            var t = Task.Run(() =>
+             {
+                 downloader.DownloadAllComments(cts.Token);
+             });
+        }
+
+        private void downloadGroupsButton_Click(object sender, EventArgs e)
+        {
+            Task.Run(() =>
+            {
+                downloader.DownloadAllGroups(cts.Token);
+            });
+        }
+
+        private void cancelButton_Click(object sender, EventArgs e)
+        {
+            cts.Cancel();
+            Log("Cancelled");
+            Thread.Sleep(250);
+            cts.Dispose();
+            cts = new CancellationTokenSource();
+        }
+
+        private void showSubscribersButton_Click(object sender, EventArgs e)
+        {
+            using (var db = new Context())
+            {
+                rawOutputTextBox.Text = "SUBSCRIBERS: \n";
+                foreach (var s in db.Users
+                    .Where(u => u.IsSub == 1)
+                    .OrderByDescending(u => db.Likes.Count(l => l.UserId == u.VkId))
+                    .ToArray()
+                    )
+                {
+
+                    rawOutputTextBox.AppendText($"\n{s.VkId} {s.FirstName} {s.LastName}\n");
+                }
+            }
+        }
+
+        private void showGroupsButton_Click(object sender, EventArgs e)
+        {
+            using (var db = new Context())
+            {
+                rawOutputTextBox.Text = "GROUPS: \n";
+                foreach (var g in db.Groups
+                    .ToArray()
+                    .Select(g => new { g = g, c = db.GroupUsers.Count(gu => gu.GroupId == g.VkId) })
+                    .OrderByDescending(o => o.c)
+                    )
+                {
+                    rawOutputTextBox.AppendText($"\n[{g.g.VkId}]\t {g.g.Name} ({g.c})\n");
+                }
+            }
+        }
+
+        private void showCommentsButton_Click(object sender, EventArgs e)
+        {
+            using (var db = new Context())
+            {
+                rawOutputTextBox.Text = "COMMENTS :\n";
+                foreach (var c in db.Comments
+                    .ToArray()
+                    .Select(c => new {
+                        c = c,
+                        l = db.Likes.Count(l => l.Type == 2 && l.ObjectId == c.VkId) })
+                    .OrderByDescending(o => o.l)
+                    )
+                {
+                    rawOutputTextBox.AppendText($"\n[{c.c.VkId}]\t ({c.l} likes)" +
+                        $" Comment for {c.c.PostId} :\n{c.c.Text} \n");
+                }
+            }
+
+        }
+
+        private void showNonSubscribersButton_Click(object sender, EventArgs e)
+        {
+            using (var db = new Context())
+            {
+                rawOutputTextBox.Text = "NON-SUBSCRIBERS :\n";
+                foreach (var s in db.Users
+                    .Where(u => u.IsSub == 0)
+                    .OrderByDescending(u => db.Likes.Count(l => l.UserId == u.VkId))
+                    .ToArray()
+                    )
+                {
+
+                    rawOutputTextBox.AppendText($"\n{s.VkId} {s.FirstName} {s.LastName}\n");
+                }
             }
         }
     }
