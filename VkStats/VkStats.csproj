@@ -95,19 +95,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VistaDB.5.Entity.6.NET40, Version=5.2.0.0, Culture=neutral, PublicKeyToken=dfc935afe2125461, processorArchitecture=MSIL">
-      <HintPath>..\packages\VistaDB.5.Entity.6.5.2.2.1587\lib\net40\VistaDB.5.Entity.6.NET40.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="VkNet, Version=1.21.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\VkNet.1.28.0\lib\net40\VkNet.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Group.cs" />
-    <Compile Include="Models\User.cs" />
-    <Compile Include="Models\UserGroup.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
